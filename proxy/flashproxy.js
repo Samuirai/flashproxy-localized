@@ -46,7 +46,8 @@
  * lang=<LANGUAGE>
  * What language in which to display the Flashproxy badge, denoted by 
  * ISO 639-1 code (ex. "de" for German).  The default is DEFAULT_LANGUAGE.
- * Default is provided if 
+ * Default is provided if no argument is specified or if a localized 
+ * badge (with alt text) has not yet been created.
  * 
  * See http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for the full list 
  * of 2-character codes.
