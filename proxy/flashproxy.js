@@ -42,6 +42,15 @@
  * What rate to limit all proxy traffic combined to. The special value "off"
  * disables the limit. The default is DEFAULT_RATE_LIMIT. There is a
  * sanity-check minimum of "10K".
+ *
+ * lang=<LANGUAGE>
+ * What language in which to display the Flashproxy badge, denoted by 
+ * ISO 639-1 code (ex. "de" for German).  The default is DEFAULT_LANGUAGE.
+ * Default is provided if 
+ * 
+ * See http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for the full list 
+ * of 2-character codes.
+ *
  */
 
 /* WebSocket links.
@@ -71,6 +80,9 @@ var MIN_FACILITATOR_POLL_INTERVAL = 10.0;
 var DEFAULT_RATE_LIMIT = undefined;
 var MIN_RATE_LIMIT = 10 * 1024;
 var RATE_LIMIT_HISTORY = 5.0;
+
+/* Set default language for flashproxy badge. */
+var DEFAULT_LANGUAGE = "en";
 
 /* Name of cookie that controls opt-in/opt-out. */
 var OPT_IN_COOKIE = "flashproxy-allow";
@@ -861,7 +873,7 @@ function Badge() {
     /* Number of proxy pairs currently connected. */
     this.num_proxy_pairs = 0;
 
-    var table, tr, td, a, img;
+    var table, tr, td, a, img, lang_code, badge_alt;
 
     table = document.createElement("table");
     tr = document.createElement("tr");
@@ -873,8 +885,20 @@ function Badge() {
     a.setAttribute("target", "_blank");
     td.appendChild(a);
     img = document.createElement("img");
-    img.setAttribute("src", "badge.png");
-    img.setAttribute("alt", "Internet freedom");
+
+    //Check to see that a language argument was provided
+    lang_code=get_param_string(query,"lang","en");
+    
+    //If there's no localization for that language, default to English.
+    if(languages[lang_code] === undefined) {
+    	lang_code="en";
+    	badge_alt="Internet Freedom";
+    }
+    else badge_alt=languages[lang_code];
+    
+    img.setAttribute("src", "badge-" + lang_code + ".png");
+    img.setAttribute("alt", badge_alt);
+
     a.appendChild(img);
 
     this.elem = table;
