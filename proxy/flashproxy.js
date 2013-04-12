@@ -927,7 +927,7 @@ function Badge() {
 }
 
 function quote(s) {
-    return "\"" + s.replace(/([\\\"])/, "\\$1") + "\"";
+    return "\"" + s.replace(/([\\\"])/g, "\\$1") + "\"";
 }
 
 function maybe_quote(s) {
