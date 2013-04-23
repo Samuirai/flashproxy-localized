@@ -82,8 +82,16 @@ var DEFAULT_RATE_LIMIT = undefined;
 var MIN_RATE_LIMIT = 10 * 1024;
 var RATE_LIMIT_HISTORY = 5.0;
 
-/* Set default language for flashproxy badge. */
+/* Set default language for flashproxy badge, and define alt strings for the 
+   different languages
+ */
 var DEFAULT_LANGUAGE = "en";
+languages = {
+	"en": "Internet Freedom",
+	"de": "Internetfreiheit",
+	"ru": "Свобода Интернета"
+};
+
 
 /* Name of cookie that controls opt-in/opt-out. */
 var OPT_IN_COOKIE = "flashproxy-allow";
