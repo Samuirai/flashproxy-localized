@@ -45,12 +45,11 @@
  *
  * lang=<LANGUAGE>
  * What language in which to display the Flashproxy badge, denoted by 
- * ISO 639-1 code (ex. "de" for German).  The default is DEFAULT_LANGUAGE.
- * Default is provided if no argument is specified or if a localized 
- * badge (with alt text) has not yet been created.
- * 
- * See http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for the full list 
- * of 2-character codes.
+ * the IETF BCP 47 standard.  
+ * See http://www.w3.org/International/articles/language-tags/ for a
+ * description of the standard and 
+ * http://www.iana.org/assignments/language-subtag-registry
+ * for the full list of possible values.
  *
  */
 
@@ -86,12 +85,13 @@ var RATE_LIMIT_HISTORY = 5.0;
    different languages
  */
 var DEFAULT_LANGUAGE = "en";
-languages = {
-	"en": "Internet Freedom",
-	"de": "Internetfreiheit",
-	"ru": "Свобода Интернета"
-};
 
+/* List of supported languages for the flashproxy badge with alt text. */
+var LANGUAGES = {
+	"en": { filename: "badge-en.png", alt: "Internet Freedom"},
+	"de": { filename: "badge-de.png", alt: "Internetfreiheit"},
+	"ru": { filename: "badge-ru.png", alt: "Свобода Интернета"}
+};
 
 /* Name of cookie that controls opt-in/opt-out. */
 var OPT_IN_COOKIE = "flashproxy-allow";
@@ -876,13 +876,23 @@ function escape_html(s) {
     return s.replace(/&<>'"/, function(x) { return HTML_ESCAPES[x] });
 }
 
+function get_badge_filename_and_alt() {
+    //Check to see that a language argument was provided
+    var lang_code=(get_param_string(query,"lang",DEFAULT_LANGUAGE)).toLowerCase();
+    
+    //If there's no localization for that language, default to English.
+    if(LANGUAGES[lang_code] === undefined) 
+    	return { filename: "badge.png", alt: "Internet Freedom" };
+    else return LANGUAGES[lang_code];
+}
+
 /* The usual embedded HTML badge. The "elem" member is a DOM element that can be
    included elsewhere. */
 function Badge() {
     /* Number of proxy pairs currently connected. */
     this.num_proxy_pairs = 0;
 
-    var table, tr, td, a, img, lang_code, badge_alt;
+    var table, tr, td, a, img, img_info;
 
     table = document.createElement("table");
     tr = document.createElement("tr");
@@ -895,18 +905,9 @@ function Badge() {
     td.appendChild(a);
     img = document.createElement("img");
 
-    //Check to see that a language argument was provided
-    lang_code=get_param_string(query,"lang","en");
-    
-    //If there's no localization for that language, default to English.
-    if(languages[lang_code] === undefined) {
-    	lang_code="en";
-    	badge_alt="Internet Freedom";
-    }
-    else badge_alt=languages[lang_code];
-    
-    img.setAttribute("src", "badge-" + lang_code + ".png");
-    img.setAttribute("alt", badge_alt);
+    img_info=get_badge_filename_and_alt();
+    img.setAttribute("src", img_info.filename);
+    img.setAttribute("alt", img_info.alt);
 
     a.appendChild(img);
 
