@@ -44,8 +44,8 @@
  * sanity-check minimum of "10K".
  *
  * lang=<LANGUAGE>
- * What language in which to display the Flashproxy badge, denoted by 
- * the IETF BCP 47 standard.  
+ * What language in which to display the Flashproxy badge.  
+ * We use the IETF BCP 47 standard for language tags.
  * See http://www.w3.org/International/articles/language-tags/ for a
  * description of the standard and 
  * http://www.iana.org/assignments/language-subtag-registry
@@ -878,7 +878,7 @@ function escape_html(s) {
 
 function get_badge_filename_and_alt() {
     //Check to see that a language argument was provided
-    var lang_code=(get_param_string(query,"lang",DEFAULT_LANGUAGE)).toLowerCase();
+    var lang_code=get_param_string(query,"lang",DEFAULT_LANGUAGE);
     
     //If there's no localization for that language, default to English.
     if(LANGUAGES[lang_code] === undefined) 
